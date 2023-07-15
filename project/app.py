@@ -1,34 +1,20 @@
+import time
+
 import account
-import queue
-import threading
+import robin_stocks.robinhood as rh
 
 NUMBER_OF_WORKERS = 1
-
-price_chan = queue.Queue()
-workers = []
-
+TICKER_SYMBOLS = ["CSHI"]
 
 def start():
     login = account.login_user(account.LOCAL_PATH, account.FILE_NAME)
-    start_workers(NUMBER_OF_WORKERS)
-    price_chan.join()
+    start_worker()
 
-
-def start_workers(num_workers: int):
-    for _ in range(num_workers):
-        t = threading.Thread(target=worker, args=(price_chan,))
-        t.start()
-        workers.append(t)
-
-
-def worker(q):
+def start_worker():
     while True:
-        item = q.get()
-        # Processing goes here
-        if item is None:
-            break
-        q.task_done()
-    return
+        quotes = rh.get_quotes(TICKER_SYMBOLS)
+        print(quotes[0].get("ask_price"))
+        time.sleep(1)
 
 
 
