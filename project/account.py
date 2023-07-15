@@ -2,6 +2,9 @@ import os
 import pyotp
 import robin_stocks.robinhood as rh
 
+LOCAL_PATH = "/Users/mingqian/Passwords"
+FILE_NAME = "rh.txt"
+
 
 def get_login_info(local_path: str, file_name: str) -> (str, str, str):
     username, password, otp = "", "", ""
@@ -16,4 +19,4 @@ def get_login_info(local_path: str, file_name: str) -> (str, str, str):
 def login_user(sign_in_path: str, sign_in_file_name: str):
     username, password, otp = get_login_info(sign_in_path, sign_in_file_name)
     totp = pyotp.TOTP(otp).now()
-    login = rh.login(username, password, mfa_code=totp)
+    return rh.login(username, password, mfa_code=totp)
